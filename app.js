@@ -8,6 +8,9 @@ var expressValidator = require('express-validator');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+const mongoose = require('mongoose');
+const config = require('./config/config');
+
 var app = express();
 
 // view engine setup
@@ -23,6 +26,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+// mongoDB
+const db = config.mongoURI;
+mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
+.then(() => console.log('MongoDB connected'))
+.catch(err => console.log(err));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
