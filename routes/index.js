@@ -64,4 +64,16 @@ router.route('/contact').get(function(req, res, next) {
   }
 });
 
+
+/* GET login page. */
+router.get('/login', function(req, res, next) {
+  res.render('login', { title: 'Login to your account' });
+});
+
+
+/* GET register page. */
+router.get('/register', function(req, res, next) {
+  res.render('register', { title: 'Register a new account' });
+});
+
 module.exports = router;
