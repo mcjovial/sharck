@@ -15,6 +15,7 @@ var config = require('./config/config');
 
 var indexRoute = require('./routes/index');
 var authRoute = require('./routes/auth');
+var taskRoute = require('./routes/task');
 
 // mongoDB
 const db = config.mongoURI;
@@ -23,6 +24,7 @@ mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
 .catch(err => console.log(err));
 
 global.User = require('./models/user');
+global.Task = require('./models/task');
 
 
 var app = express();
@@ -59,6 +61,7 @@ app.use(function(req, res, next) {
 
 app.use('/', indexRoute);
 app.use('/', authRoute);
+app.use('/', taskRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
