@@ -4,76 +4,50 @@ var router = express.Router();
 var nodemailer = require('nodemailer');
 var config = require('../config/config');
 var transporter = nodemailer.createTransport(config.mailer);
-// verify connection configuration
-transporter.verify(function(error, success) {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log("Server is ready to take our messages");
-  }
-});
-
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Sharck - a code sharing platform' });
+  res.render('index', { title: 'Code4Share - a platform for sharing code.' });
 });
 
-
-/* GET about page. */
 router.get('/about', function(req, res, next) {
-  res.render('about', { title: 'Sharck - a code sharing platform' });
+  res.render('about', { title: 'Code4Share - a platform for sharing code.'});
 });
 
+router.route('/contact')
+  .get(function(req, res, next) {
+    res.render('contact', { title: 'Code4Share - a platform for sharing code.'});
+  })
+  .post(function(req, res, next) {
+    req.checkBody('name', 'Empty name').notEmpty();
+    req.checkBody('email', 'Invalid email').isEmail();
+    req.checkBody('message', 'Empty message').notEmpty();
+    var errors = req.validationErrors();
 
-/* GET contact page. */
-router.route('/contact').get(function(req, res, next) {
-  res.render('contact', { title: 'Sharck - a code sharing platform' });
-}).post(function(req, res, next) {
-  req.checkBody('name', 'Empty name').notEmpty();
-  req.checkBody('email', 'Invalid email').isEmail();
-  req.checkBody('message', 'Empty message').notEmpty();
+    if(errors) {
+      res.render('contact', {
+        title: 'Code4Share - a platform for sharing code.',
+        name: req.body.name,
+        email: req.body.email,
+        message: req.body.message,
+        errorMessages: errors
+      });
+    } else {
+      var mailOptions = {
+        from: 'Code4Share <no-reply@code4share.com>',
+        to: 'demo.code4startup@gmail.com',
+        subject: 'You got a new message from visitor 💋 😽',
+        text: req.body.message
+      };
 
-  var errors = req.validationErrors();
-  
-  if (errors) {
-    res.render('contact', {
-      title: 'Sharck - a code sharing platform',
-      name: req.body.name,
-      email: req.body.email,
-      message: req.body.message,
-      errorMessages: errors
-    });
-  } else {
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          return console.log(error);
+        }
+        res.render('thank', { title: 'Code4Share - a platform for sharing code.'});
+      });
 
-    var mailOptions = {
-      from: req.body.email,
-      to: 'emmanuel.elias.232317@unn.edu.ng',
-      subject: 'Message from a visitor 🤗😉 @ Sharck.com',
-      text: req.body.message
-    };
-
-    transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email sent: ' + info.response);
-      }
-    });
-    res.render('thanks', { title: 'Sharck - a code sharing platform' });
-  }
-});
-
-
-/* GET login page. */
-router.get('/login', function(req, res, next) {
-  res.render('login', { title: 'Login to your account' });
-});
-
-
-/* GET register page. */
-router.get('/register', function(req, res, next) {
-  res.render('register', { title: 'Register a new account' });
-});
+    }
+  });
 
 module.exports = router;

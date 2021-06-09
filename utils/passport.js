@@ -19,7 +19,7 @@ passport.use(new LocalStrategy({
       if (err) return done(err);
       if (!user) {
         return done(null, false, {
-          message: 'Email not found'
+          message: 'Incorrect username or password'
         });
       }
       if (!user.validPassword(password)) {
