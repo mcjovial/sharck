@@ -26,7 +26,6 @@ mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
 global.User = require('./models/user');
 global.Task = require('./models/task');
 
-
 var app = express();
 
 // view engine setup

@@ -35,9 +35,9 @@ passport.use(new LocalStrategy({
 ));
 
 passport.use(new FacebookStrategy({
-    clientID: '536159177756262',
-    clientSecret: 'a6c08c2d103990c3cb54a040ad4b4622',
-    callbackURL: 'http://localhost:3000/auth/facebook/callback',
+  clientID: '536159177756262',
+  clientSecret: 'a6c08c2d103990c3cb54a040ad4b4622',
+  callbackURL: 'http://localhost:3000/auth/facebook/callback',
     profileFields: ['id', 'displayName', 'email']
   },
   function(token, refreshToken, profile, done) {
@@ -59,13 +59,15 @@ passport.use(new FacebookStrategy({
           var user = new User();
           user.name = profile.displayName;
           user.email = profile.emails[0].value;
-          user.facebookId = profile.id
+          user.facebookId = profile.idea
           user.save(function (err) {
             if (err) return done(null, false, { message: "Can't save user info"});
             return done(null, user);
           });
         })
       }
+
+
     });
   }
 ));
